@@ -108,12 +108,12 @@ def create_google_oauth_blueprint(app):
         if access_token is None:
             logger.warning("Access token missing in call back request.")
             flash("Validation error. Please retry.")
-            return redirect(url_for("redash.login"))
+            return redirect(url_for("redash.login", org_slug=session.get("org_slug") or current_org.slug))
 
         profile = get_user_profile(access_token, logger)
         if profile is None:
             flash("Validation error. Please retry.")
-            return redirect(url_for("redash.login"))
+            return redirect(url_for("redash.login", org_slug=session.get("org_slug") or current_org.slug))
 
         if "org_slug" in session:
             org = models.Organization.get_by_slug(session.pop("org_slug"))

@@ -37,7 +37,7 @@ def login(org_slug=None):
 
     if not settings.LDAP_LOGIN_ENABLED:
         logger.error("Cannot use LDAP for login without being enabled in settings")
-        return redirect(url_for("redash.index", next=next_path))
+        return redirect(url_for("redash.index", org_slug=org_slug, next=next_path))
 
     if current_user.is_authenticated:
         return redirect(next_path)
@@ -54,7 +54,7 @@ def login(org_slug=None):
             if user is None:
                 return logout_and_redirect_to_index()
 
-            return redirect(next_path or url_for("redash.index"))
+            return redirect(next_path or url_for("redash.index", org_slug=org_slug))
         else:
             flash("Incorrect credentials.")
 
