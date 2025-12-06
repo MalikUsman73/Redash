@@ -175,3 +175,92 @@ jobs:
         with:
           name: coverage
           path: coverage
+          
+          
+   deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-22.04
+    # Ensure all previous testing stages pass before deployment
+    needs: [backend-unit-tests, frontend-e2e-tests] 
+    environment: 
+      name: staging # Define a GitHub Environment for protection/tracking
+    
+    # Environment variables for AWS configuration
+    env:
+      AWS_REGION: us-east-1
+      ECR_REPOSITORY: redash-staging-repo
+      # Use the current commit SHA as a unique version tag
+      IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # These secrets must be configured in your GitHub repository settings
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log into Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      # Step 1: BUILD & TAG the image (using the successful build from the `backend-unit-tests` 	job)
+      - name: Build and Tag Server Image
+        run: |
+          # Rebuild the server image to ensure it's fresh and tag it for ECR
+          docker compose build server --build-arg install_groups="main,all_ds,dev" --build-arg skip_frontend_build=true
+          docker tag redash_server:latest ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      # Step 2: Push Image Artifact to ECR
+      - name: Push Image to ECR
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      # Step 3: Deploy to AWS ECS/Staging Environment
+      # This step assumes you have an ECS Task Definition ready for Redash
+      - name: Deploy Task Definition to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          # Update your task definition file to use the new image tag
+          task-definition: your-redash-staging-task.json # Placeholder JSON file
+          service: redash-staging-service
+          cluster: redash-staging-cluster
+          wait-for-service-stability: true
+          # Pass the ECR image URI and tag
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          
+          
+          
+          
+   deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-22.04
+    needs: deploy-staging
+    environment: 
+      name: production # This enables GitHub's manual approval feature
+      url: https://app.redash.io # Placeholder for production URL
+
+    steps:
+      - name: Setup AWS Credentials (Production)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
+      # The same tagging and pushing steps would occur here, targeting a Production ECR repository.
+      
+      - name: Deploy to ECS Production
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          # Placeholder for your production task definition and cluster
+          task-definition: your-redash-prod-task.json
+          service: redash-prod-service
+          cluster: redash-prod-cluster
+
+      # Monitoring Integration (Post-Deployment)
+      - name: Notify Sentry/New Relic of New Release
+        # This step would call an external API (like Sentry's Releases API) 
+        # to mark the new deployment version for error tracking.
+        run: echo "Deployment to Production successful. Notifying monitoring tools..."
