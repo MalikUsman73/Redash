@@ -168,6 +168,11 @@ jobs:
       - name: "Failure: output container logs to console"
         if: failure()
         run: docker compose logs
+
+        # ADD THIS NEW STEP:
+      - name: Create Local Coverage Directory
+        run: mkdir -p coverage
+
       - name: Copy Code Coverage Results
         run: docker cp cypress:/usr/src/app/coverage ./coverage || true
       - name: Store Coverage Results
