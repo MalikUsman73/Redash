@@ -41,7 +41,7 @@ def create_app():
     sentry.init()
     app = Redash()
 
-    # Check and update the cached version for use by the client
+    # Check and update the cached version for use by the client.
     reset_new_version_status()
 
     security.init_app(app)
