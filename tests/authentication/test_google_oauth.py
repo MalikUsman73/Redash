@@ -1,13 +1,12 @@
-from flask import session
 from mock import Mock, patch
-from tests import BaseTestCase
-from redash.authentication.google_oauth import (
-    verify_profile,
-    get_user_profile,
-    build_redirect_uri,
-    build_next_path,
-)
+
 from redash import models
+from redash.authentication.google_oauth import (
+    get_user_profile,
+    verify_profile,
+)
+from tests import BaseTestCase
+
 
 class TestGoogleOAuthUtils(BaseTestCase):
     def test_verify_profile_public_org(self):
@@ -41,7 +40,7 @@ class TestGoogleOAuthUtils(BaseTestCase):
         mock_resp.status_code = 200
         mock_resp.json.return_value = {"email": "test@test.com"}
         mock_get.return_value = mock_resp
-        
+
         logger = Mock()
         profile = get_user_profile("token", logger)
         self.assertEqual(profile, {"email": "test@test.com"})
@@ -51,7 +50,7 @@ class TestGoogleOAuthUtils(BaseTestCase):
         mock_resp = Mock()
         mock_resp.status_code = 401
         mock_get.return_value = mock_resp
-        
+
         logger = Mock()
         profile = get_user_profile("token", logger)
         self.assertIsNone(profile)
@@ -90,16 +89,16 @@ class TestGoogleOAuthCallback(BaseTestCase):
         }
         mock_get_profile.return_value = {"email": "user@example.com", "name": "User", "picture": "http://pic"}
         mock_create_user.return_value = self.factory.create_user()
-        
+
         # Ensure our org allows this domain
         self.factory.org.settings[models.Organization.SETTING_GOOGLE_APPS_DOMAINS] = ["example.com"]
-        
+
         with self.app.test_client() as c:
             with c.session_transaction() as sess:
                 sess['org_slug'] = self.factory.org.slug
-            
+
             rv = c.get("/oauth/google_callback")
-            
+
             # Should redirect to index/next
             self.assertEqual(rv.status_code, 302)
             self.assertTrue(mock_create_user.called)
@@ -112,16 +111,16 @@ class TestGoogleOAuthCallback(BaseTestCase):
             self.skipTest("OAuth extension not found")
 
         self.google_client_mock.authorize_access_token.return_value = {"access_token": None}
-        
+
         with self.app.test_client() as c:
             rv = c.get("/oauth/google_callback")
-            
+
             # Redirects to login
             self.assertEqual(rv.status_code, 302)
             self.assertIn("/login", rv.location)
             # Should flash error
             # (Checking flash requires capturing templates or session, simplistic here is fine)
-    
+
     @patch("redash.authentication.google_oauth.get_user_profile")
     def test_authorized_profile_fetch_fail(self, mock_get_profile):
         if not self.google_client_mock:
@@ -129,7 +128,7 @@ class TestGoogleOAuthCallback(BaseTestCase):
 
         self.google_client_mock.authorize_access_token.return_value = {"access_token": "token"}
         mock_get_profile.return_value = None
-        
+
         with self.app.test_client() as c:
             rv = c.get("/oauth/google_callback")
             self.assertEqual(rv.status_code, 302)
@@ -142,9 +141,9 @@ class TestGoogleOAuthCallback(BaseTestCase):
 
         self.google_client_mock.authorize_access_token.return_value = {"access_token": "token"}
         mock_get_profile.return_value = {"email": "bad@bad.com", "name": "Bad", "picture": "pic"}
-        
+
         self.factory.org.settings[models.Organization.SETTING_GOOGLE_APPS_DOMAINS] = ["good.com"]
-        
+
         with self.app.test_client() as c:
              with c.session_transaction() as sess:
                 sess['org_slug'] = self.factory.org.slug
