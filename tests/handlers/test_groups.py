@@ -10,9 +10,9 @@ class TestGroupMemberResources(BaseTestCase):
         group = self.factory.create_group()
         user = self.factory.create_user()
         admin = self.factory.create_admin()
-        
+
         rv = self.make_request(
-            "post", 
+            "post",
             "/api/groups/{}/members".format(group.id),
             data={"user_id": user.id},
             user=admin
@@ -25,12 +25,12 @@ class TestGroupMemberResources(BaseTestCase):
         user = self.factory.create_user()
         user.group_ids.append(group.id)
         db.session.commit()
-        
+
         admin = self.factory.create_admin()
 
         rv = self.make_request(
-            "get", 
-            "/api/groups/{}/members".format(group.id), 
+            "get",
+            "/api/groups/{}/members".format(group.id),
             user=admin
         )
         self.assertEqual(rv.status_code, 200)
@@ -42,7 +42,7 @@ class TestGroupMemberResources(BaseTestCase):
         user = self.factory.create_user()
         user.group_ids.append(group.id)
         db.session.commit()
-        
+
         admin = self.factory.create_admin()
 
         rv = self.make_request(
@@ -51,7 +51,7 @@ class TestGroupMemberResources(BaseTestCase):
             user=admin
         )
         self.assertEqual(rv.status_code, 200)
-        
+
         # reload user
         # user = models.User.get_by_id(user.id) # get_by_id might be cached or session bound?
         # db.session.expire_all()
@@ -73,7 +73,7 @@ class TestGroupDataSourceResources(BaseTestCase):
         )
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(rv.json["id"], ds.id)
-        
+
         # Verify persistence
         ds_group = models.DataSourceGroup.query.filter_by(group_id=group.id, data_source_id=ds.id).first()
         self.assertIsNotNone(ds_group)
@@ -220,11 +220,11 @@ class TestGroupResourcePost(BaseTestCase):
         group = self.factory.create_group(name="Old Name")
         admin = self.factory.create_admin()
         data = {"name": "New Name"}
-        
+
         rv = self.make_request(
-            "post", 
-            "/api/groups/{}".format(group.id), 
-            data=data, 
+            "post",
+            "/api/groups/{}".format(group.id),
+            data=data,
             user=admin
         )
         self.assertEqual(rv.status_code, 200)
