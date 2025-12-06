@@ -219,7 +219,16 @@ class QueryListResource(BaseQueryListResource):
         :>json number runtime: Runtime of last query execution, in seconds (may be null)
         """
         query_def = request.get_json(force=True)
-        data_source = models.DataSource.get_by_id_and_org(query_def.pop("data_source_id"), self.current_org)
+        try:
+            data_source_id = query_def.pop("data_source_id")
+        except KeyError:
+            abort(400, message="data_source_id is required")
+
+        try:
+            data_source = models.DataSource.get_by_id_and_org(data_source_id, self.current_org)
+        except models.NoResultFound:
+            abort(404, message="Data source not found")
+
         require_access(data_source, self.current_user, not_view_only)
         require_access_to_dropdown_queries(self.current_user, query_def)
 

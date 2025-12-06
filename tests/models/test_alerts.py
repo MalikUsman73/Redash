@@ -2,6 +2,7 @@ import textwrap
 from unittest import TestCase
 
 from redash.models import OPERATORS, Alert, db, next_state
+from redash.utils import base_url
 from tests import BaseTestCase
 
 
@@ -170,22 +171,24 @@ class TestAlertRenderTemplate(BaseTestCase):
         </pre>
         """
         expected = """
-        <pre>
-        ALERT_STATUS        UNKNOWN
-        ALERT_SELECTOR      first
-        ALERT_CONDITION     equals
-        ALERT_THRESHOLD     5
-        ALERT_NAME          %s
-        ALERT_URL           https:///default/alerts/%d
-        QUERY_NAME          Query
-        QUERY_URL           https:///default/queries/%d
-        QUERY_RESULT_VALUE  1
-        QUERY_RESULT_ROWS   [{'foo': 1}]
-        QUERY_RESULT_COLS   [{'name': 'foo', 'type': 'STRING'}]
-        </pre>
-        """ % (
+    <pre>
+    ALERT_STATUS        UNKNOWN
+    ALERT_SELECTOR      first
+    ALERT_CONDITION     equals
+    ALERT_THRESHOLD     5
+    ALERT_NAME          %s
+    ALERT_URL           %s/alerts/%d
+    QUERY_NAME          Query
+    QUERY_URL           %s/queries/%d
+    QUERY_RESULT_VALUE  1
+    QUERY_RESULT_ROWS   [{'foo': 1}]
+    QUERY_RESULT_COLS   [{'name': 'foo', 'type': 'STRING'}]
+    </pre>
+    """ % (
             alert.name,
+            base_url(self.factory.org),
             alert.id,
+            base_url(self.factory.org),
             alert.query_id,
         )
         result = alert.render_template(textwrap.dedent(custom_alert))

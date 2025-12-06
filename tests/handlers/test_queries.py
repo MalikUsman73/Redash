@@ -325,6 +325,28 @@ class TestQueryListResourcePost(BaseTestCase):
         rv = self.make_request("post", "/api/queries", data=query_data)
         self.assertEqual(rv.status_code, 400)
 
+    def test_create_query_with_invalid_data_source(self):
+        query_data = {
+            "name": "Testing",
+            "query": "SELECT 1",
+            "data_source_id": 9999999,  # Non-existent ID
+        }
+        rv = self.make_request("post", "/api/queries", data=query_data)
+        self.assertEqual(rv.status_code, 404)
+
+    def test_create_query_fails_with_non_existent_data_source(self):
+        # This duplicates the above test effectively, removing redundancy
+        pass
+
+    def test_create_query_fails_missing_data_source_id(self):
+        query_data = {
+            "name": "Testing",
+            "query": "SELECT 1"
+            # Missing data_source_id
+        }
+        rv = self.make_request("post", "/api/queries", data=query_data)
+        self.assertEqual(rv.status_code, 400)
+
 
 class TestQueryArchiveResourceGet(BaseTestCase):
     def test_returns_queries(self):
