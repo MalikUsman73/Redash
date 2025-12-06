@@ -59,7 +59,7 @@ class TestDatabricksTasks(BaseTestCase):
 
         tables_data = [
             {"name": "table1", "columns": ["col1", "col2"]},
-            {"name": "table2", "columns": ["col3", "col4"]}
+            {"name": "table2", "columns": ["col3", "col4"]},
         ]
         mock_query_runner.get_database_tables_with_columns.return_value = tables_data
         mock_models.DataSource.get_by_id.return_value = mock_datasource
@@ -139,10 +139,7 @@ class TestDatabricksTasks(BaseTestCase):
         mock_query_runner = MagicMock()
         mock_datasource.query_runner = mock_query_runner
 
-        tables_data = [
-            {"name": "table1"},
-            {"name": "table2"}
-        ]
+        tables_data = [{"name": "table1"}, {"name": "table2"}]
         mock_query_runner.get_database_tables_with_columns.return_value = tables_data
         mock_models.DataSource.get_by_id.return_value = mock_datasource
 
@@ -176,10 +173,7 @@ class TestDatabricksTasks(BaseTestCase):
         mock_query_runner = MagicMock()
         mock_datasource.query_runner = mock_query_runner
 
-        columns_data = [
-            {"name": "col1", "type": "string"},
-            {"name": "col2", "type": "int"}
-        ]
+        columns_data = [{"name": "col1", "type": "string"}, {"name": "col2", "type": "int"}]
         mock_query_runner.get_table_columns.return_value = columns_data
         mock_models.DataSource.get_by_id.return_value = mock_datasource
 

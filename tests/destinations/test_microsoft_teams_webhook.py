@@ -68,8 +68,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
 
         # Verify default message template
         self.assertEqual(
-            schema["properties"]["message_template"]["default"],
-            MicrosoftTeamsWebhook.ALERTS_DEFAULT_MESSAGE_TEMPLATE
+            schema["properties"]["message_template"]["default"], MicrosoftTeamsWebhook.ALERTS_DEFAULT_MESSAGE_TEMPLATE
         )
 
     def test_icon(self):
@@ -102,9 +101,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
         mock_query.id = 100
         mock_query.query_text = "SELECT * FROM users"
 
-        options = {
-            "url": "https://outlook.office.com/webhook/xxx"
-        }
+        options = {"url": "https://outlook.office.com/webhook/xxx"}
 
         # Execute
         teams.notify(
@@ -115,7 +112,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -154,15 +151,9 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
         mock_query.id = 100
         mock_query.query_text = "SELECT * FROM users"
 
-        custom_template = json.dumps({
-            "text": "Alert: {alert_name}",
-            "url": "{alert_url}"
-        })
+        custom_template = json.dumps({"text": "Alert: {alert_name}", "url": "{alert_url}"})
 
-        options = {
-            "url": "https://outlook.office.com/webhook/xxx",
-            "message_template": custom_template
-        }
+        options = {"url": "https://outlook.office.com/webhook/xxx", "message_template": custom_template}
 
         # Execute
         teams.notify(
@@ -173,7 +164,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -200,9 +191,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
         mock_query.id = 99
         mock_query.query_text = "SELECT 1"
 
-        options = {
-            "url": "https://outlook.office.com/webhook/xxx"
-        }
+        options = {"url": "https://outlook.office.com/webhook/xxx"}
 
         # Execute
         teams.notify(
@@ -213,7 +202,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
             app=None,
             host="https://redash.mycompany.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -244,9 +233,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
         mock_query.id = 100
         mock_query.query_text = "SELECT 1"
 
-        options = {
-            "url": "https://outlook.office.com/webhook/xxx"
-        }
+        options = {"url": "https://outlook.office.com/webhook/xxx"}
 
         # Execute
         teams.notify(
@@ -257,7 +244,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify error logging
@@ -281,9 +268,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
         mock_query.id = 100
         mock_query.query_text = "SELECT 1"
 
-        options = {
-            "url": "https://outlook.office.com/webhook/xxx"
-        }
+        options = {"url": "https://outlook.office.com/webhook/xxx"}
 
         # Execute - should not raise exception
         teams.notify(
@@ -294,7 +279,7 @@ class TestMicrosoftTeamsWebhook(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify exception logging

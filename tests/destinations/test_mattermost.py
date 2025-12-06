@@ -42,9 +42,7 @@ class TestMattermost(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx"}
 
         # Execute
         mattermost.notify(
@@ -55,7 +53,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -89,9 +87,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx"}
 
         # Execute
         mattermost.notify(
@@ -102,7 +98,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -130,9 +126,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx"}
 
         # Execute
         mattermost.notify(
@@ -143,7 +137,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -170,9 +164,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx"}
 
         # Execute
         mattermost.notify(
@@ -183,7 +175,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -213,10 +205,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx",
-            "username": "Redash Bot"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx", "username": "Redash Bot"}
 
         # Execute
         mattermost.notify(
@@ -227,7 +216,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -254,10 +243,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx",
-            "icon_url": "https://example.com/icon.png"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx", "icon_url": "https://example.com/icon.png"}
 
         # Execute
         mattermost.notify(
@@ -268,7 +254,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -295,10 +281,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx",
-            "channel": "#alerts"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx", "channel": "#alerts"}
 
         # Execute
         mattermost.notify(
@@ -309,7 +292,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -340,7 +323,7 @@ class TestMattermost(BaseTestCase):
             "url": "https://mattermost.example.com/hooks/xxx",
             "username": "Redash Bot",
             "icon_url": "https://example.com/icon.png",
-            "channel": "#alerts"
+            "channel": "#alerts",
         }
 
         # Execute
@@ -352,7 +335,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -384,9 +367,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx"}
 
         # Execute
         mattermost.notify(
@@ -397,7 +378,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify error logging
@@ -421,9 +402,7 @@ class TestMattermost(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "url": "https://mattermost.example.com/hooks/xxx"
-        }
+        options = {"url": "https://mattermost.example.com/hooks/xxx"}
 
         # Execute - should not raise exception
         mattermost.notify(
@@ -434,7 +413,7 @@ class TestMattermost(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify exception logging

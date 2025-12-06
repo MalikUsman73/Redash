@@ -7,15 +7,15 @@ from redash import settings
 from tests import BaseTestCase
 
 # Mock ldap3 - persistent across tests in this process
-if 'ldap3' not in sys.modules:
+if "ldap3" not in sys.modules:
     mock_ldap3 = Mock()
     mock_ldap3.Server = Mock()
     mock_ldap3.Connection = Mock()
     mock_ldap3.utils.conv.escape_filter_chars = lambda x: x
-    sys.modules['ldap3'] = mock_ldap3
-    sys.modules['ldap3.utils'] = Mock()
-    sys.modules['ldap3.utils.conv'] = Mock()
-    sys.modules['ldap3.utils.conv'].escape_filter_chars = lambda x: x
+    sys.modules["ldap3"] = mock_ldap3
+    sys.modules["ldap3.utils"] = Mock()
+    sys.modules["ldap3.utils.conv"] = Mock()
+    sys.modules["ldap3.utils.conv"].escape_filter_chars = lambda x: x
 
 from redash.authentication import ldap_auth
 from redash.authentication.ldap_auth import auth_ldap_user
@@ -113,10 +113,7 @@ class TestLDAPAuth(BaseTestCase):
     @patch("redash.authentication.ldap_auth.current_user")
     def test_login_success(self, mock_current_user, mock_auth_ldap_user, mock_create_and_login):
         mock_current_user.is_authenticated = False
-        mock_user = {
-            "displayName": ["LDAP User"],
-            "mail": ["ldap@example.com"]
-        }
+        mock_user = {"displayName": ["LDAP User"], "mail": ["ldap@example.com"]}
         mock_auth_ldap_user.return_value = mock_user
         mock_create_and_login.return_value = True
 
@@ -148,7 +145,7 @@ class TestLDAPAuth(BaseTestCase):
             # But the code might return it directly.
             # If rv is str, we check content.
             # If response, check status.
-            if hasattr(rv, 'status_code'):
+            if hasattr(rv, "status_code"):
                 self.assertEqual(rv.status_code, 200)
             else:
                 self.assertIsInstance(rv, str)
@@ -161,8 +158,8 @@ class TestLDAPAuth(BaseTestCase):
         from redash.authentication.ldap_auth import login
 
         with self.app.test_request_context("/ldap/login"):
-             rv = login(org_slug="default")
-             self.assertEqual(rv.status_code, 302)
+            rv = login(org_slug="default")
+            self.assertEqual(rv.status_code, 302)
 
     @patch("redash.authentication.ldap_auth.current_user")
     def test_login_authenticated(self, mock_current_user):
@@ -170,5 +167,5 @@ class TestLDAPAuth(BaseTestCase):
         from redash.authentication.ldap_auth import login
 
         with self.app.test_request_context("/ldap/login"):
-             rv = login(org_slug="default")
-             self.assertEqual(rv.status_code, 302)
+            rv = login(org_slug="default")
+            self.assertEqual(rv.status_code, 302)

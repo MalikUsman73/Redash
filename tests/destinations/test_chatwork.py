@@ -23,10 +23,7 @@ class TestChatWork(BaseTestCase):
         self.assertIn("api_token", schema["secret"])
 
         # Verify default message template
-        self.assertEqual(
-            schema["properties"]["message_template"]["default"],
-            ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE
-        )
+        self.assertEqual(schema["properties"]["message_template"]["default"], ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE)
 
     def test_icon(self):
         self.assertEqual(ChatWork.icon(), "fa-comment")
@@ -53,7 +50,7 @@ class TestChatWork(BaseTestCase):
         options = {
             "api_token": "test_token",
             "room_id": "12345",
-            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE
+            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE,
         }
 
         # Execute
@@ -65,7 +62,7 @@ class TestChatWork(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -99,7 +96,7 @@ class TestChatWork(BaseTestCase):
         options = {
             "api_token": "test_token",
             "room_id": "12345",
-            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE
+            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE,
         }
 
         # Execute
@@ -111,7 +108,7 @@ class TestChatWork(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -143,7 +140,7 @@ class TestChatWork(BaseTestCase):
         options = {
             "api_token": "test_token",
             "room_id": "12345",
-            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE
+            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE,
         }
 
         # Execute
@@ -155,7 +152,7 @@ class TestChatWork(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -188,7 +185,7 @@ class TestChatWork(BaseTestCase):
         options = {
             "api_token": "test_token",
             "room_id": "12345",
-            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE
+            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE,
         }
 
         # Execute
@@ -200,7 +197,7 @@ class TestChatWork(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify error logging
@@ -228,7 +225,7 @@ class TestChatWork(BaseTestCase):
         options = {
             "api_token": "test_token",
             "room_id": "12345",
-            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE
+            "message_template": ChatWork.ALERTS_DEFAULT_MESSAGE_TEMPLATE,
         }
 
         # Execute - should not raise exception
@@ -240,7 +237,7 @@ class TestChatWork(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify exception logging
@@ -269,7 +266,7 @@ class TestChatWork(BaseTestCase):
         options = {
             "api_token": "test_token",
             "room_id": "12345",
-            "message_template": "Alert: {alert_name}\\nState: {new_state}"
+            "message_template": "Alert: {alert_name}\\nState: {new_state}",
         }
 
         # Execute
@@ -281,7 +278,7 @@ class TestChatWork(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify newlines are properly replaced

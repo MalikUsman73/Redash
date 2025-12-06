@@ -22,15 +22,18 @@ class TestEmail(BaseTestCase):
 
         # Verify default subject template
         self.assertEqual(
-            schema["properties"]["subject_template"]["default"],
-            settings.ALERTS_DEFAULT_MAIL_SUBJECT_TEMPLATE
+            schema["properties"]["subject_template"]["default"], settings.ALERTS_DEFAULT_MAIL_SUBJECT_TEMPLATE
         )
 
     def test_icon(self):
         self.assertEqual(Email.icon(), "fa-envelope")
 
     @patch("redash.destinations.email.mail")
-    @patch("redash.destinations.email.open", new_callable=mock_open, read_data="<html>Default template {alert_name}</html>")
+    @patch(
+        "redash.destinations.email.open",
+        new_callable=mock_open,
+        read_data="<html>Default template {alert_name}</html>",
+    )
     def test_notify_with_custom_subject_and_body(self, mock_file, mock_mail):
         # Setup
         email_dest = Email({"addresses": "test@example.com"})
@@ -44,10 +47,7 @@ class TestEmail(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "addresses": "test1@example.com,test2@example.com",
-            "subject_template": "{alert_name} - {state}"
-        }
+        options = {"addresses": "test1@example.com,test2@example.com", "subject_template": "{alert_name} - {state}"}
 
         # Execute
         email_dest.notify(
@@ -58,7 +58,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -70,7 +70,11 @@ class TestEmail(BaseTestCase):
         self.assertEqual(message.html, "<html>Custom Body</html>")
 
     @patch("redash.destinations.email.mail")
-    @patch("redash.destinations.email.open", new_callable=mock_open, read_data="<html>Default template {alert_name}</html>")
+    @patch(
+        "redash.destinations.email.open",
+        new_callable=mock_open,
+        read_data="<html>Default template {alert_name}</html>",
+    )
     def test_notify_with_default_template(self, mock_file, mock_mail):
         # Setup
         email_dest = Email({"addresses": "test@example.com"})
@@ -85,10 +89,7 @@ class TestEmail(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "addresses": "test@example.com",
-            "subject_template": "{alert_name} - {state}"
-        }
+        options = {"addresses": "test@example.com", "subject_template": "{alert_name} - {state}"}
 
         # Execute
         email_dest.notify(
@@ -99,7 +100,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -127,9 +128,7 @@ class TestEmail(BaseTestCase):
         mock_query = MagicMock()
 
         # Options without subject_template - should use default
-        options = {
-            "addresses": "test@example.com"
-        }
+        options = {"addresses": "test@example.com"}
 
         # Execute
         email_dest.notify(
@@ -140,7 +139,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify - subject should use default template from settings
@@ -148,10 +147,7 @@ class TestEmail(BaseTestCase):
         message = mock_mail.send.call_args[0][0]
 
         # Default template should be used
-        expected_subject = settings.ALERTS_DEFAULT_MAIL_SUBJECT_TEMPLATE.format(
-            alert_name="Test Alert",
-            state="OK"
-        )
+        expected_subject = settings.ALERTS_DEFAULT_MAIL_SUBJECT_TEMPLATE.format(alert_name="Test Alert", state="OK")
         self.assertEqual(message.subject, expected_subject)
 
     @patch("redash.destinations.email.logging")
@@ -168,9 +164,7 @@ class TestEmail(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "addresses": ""
-        }
+        options = {"addresses": ""}
 
         # Execute
         email_dest.notify(
@@ -181,7 +175,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify warning was logged
@@ -202,9 +196,7 @@ class TestEmail(BaseTestCase):
         mock_query = MagicMock()
 
         # Addresses with extra commas and whitespace
-        options = {
-            "addresses": "test1@example.com, ,test2@example.com,,"
-        }
+        options = {"addresses": "test1@example.com, ,test2@example.com,,"}
 
         # Execute
         email_dest.notify(
@@ -215,7 +207,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify only valid emails are included
@@ -247,9 +239,7 @@ class TestEmail(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "addresses": "test@example.com"
-        }
+        options = {"addresses": "test@example.com"}
 
         # Execute - should not raise exception
         email_dest.notify(
@@ -260,7 +250,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify exception was logged
@@ -281,10 +271,7 @@ class TestEmail(BaseTestCase):
 
         mock_query = MagicMock()
 
-        options = {
-            "addresses": "test@example.com",
-            "subject_template": "Alert: {alert_name} is {state}"
-        }
+        options = {"addresses": "test@example.com", "subject_template": "Alert: {alert_name} is {state}"}
 
         # Execute with lowercase state
         email_dest.notify(
@@ -295,7 +282,7 @@ class TestEmail(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify state is uppercased

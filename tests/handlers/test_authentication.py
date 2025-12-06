@@ -20,7 +20,7 @@ class TestInvite(BaseTestCase):
     def setUp(self):
         super(TestInvite, self).setUp()
         # Disable LDAP to avoid URL building issues when LDAP blueprint is registered
-        self.ldap_enabled_patch = mock.patch('redash.settings.LDAP_LOGIN_ENABLED', False)
+        self.ldap_enabled_patch = mock.patch("redash.settings.LDAP_LOGIN_ENABLED", False)
         self.ldap_enabled_patch.start()
 
     def tearDown(self):
@@ -60,7 +60,7 @@ class TestInvitePost(BaseTestCase):
     def setUp(self):
         super(TestInvitePost, self).setUp()
         # Disable LDAP to avoid URL building issues when LDAP blueprint is registered
-        self.ldap_enabled_patch = mock.patch('redash.settings.LDAP_LOGIN_ENABLED', False)
+        self.ldap_enabled_patch = mock.patch("redash.settings.LDAP_LOGIN_ENABLED", False)
         self.ldap_enabled_patch.start()
 
     def tearDown(self):

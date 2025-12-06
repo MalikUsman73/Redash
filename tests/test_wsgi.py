@@ -11,8 +11,8 @@ class TestWSGI(BaseTestCase):
         self.assertIsNotNone(wsgi.app)
 
         # Verify it's a Flask application
-        self.assertTrue(hasattr(wsgi.app, 'config'))
-        self.assertTrue(hasattr(wsgi.app, 'route'))
+        self.assertTrue(hasattr(wsgi.app, "config"))
+        self.assertTrue(hasattr(wsgi.app, "route"))
 
         # Verify app name
-        self.assertEqual(wsgi.app.name, 'redash.app')
+        self.assertEqual(wsgi.app.name, "redash.app")

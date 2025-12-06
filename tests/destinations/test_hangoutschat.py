@@ -48,9 +48,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute
         hangouts.notify(
@@ -61,7 +59,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -105,9 +103,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute
         hangouts.notify(
@@ -118,7 +114,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -147,9 +143,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute with unknown state
         hangouts.notify(
@@ -160,7 +154,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -188,9 +182,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute
         hangouts.notify(
@@ -201,7 +193,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -233,10 +225,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook",
-            "icon_url": "https://example.com/icon.png"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook", "icon_url": "https://example.com/icon.png"}
 
         # Execute
         hangouts.notify(
@@ -247,7 +236,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -274,9 +263,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute without host
         hangouts.notify(
@@ -287,7 +274,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host=None,
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -316,9 +303,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute
         hangouts.notify(
@@ -329,7 +314,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify error logging
@@ -354,9 +339,7 @@ class TestHangoutsChat(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "url": "https://chat.googleapis.com/webhook"
-        }
+        options = {"url": "https://chat.googleapis.com/webhook"}
 
         # Execute - should not raise exception
         hangouts.notify(
@@ -367,7 +350,7 @@ class TestHangoutsChat(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify exception logging

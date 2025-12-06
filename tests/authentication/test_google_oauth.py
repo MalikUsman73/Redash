@@ -60,20 +60,20 @@ class TestGoogleOAuthUtils(BaseTestCase):
 class TestGoogleOAuthCallback(BaseTestCase):
     def setUp(self):
         super(TestGoogleOAuthCallback, self).setUp()
-        self.oauth_ext = self.app.extensions.get('authlib.integrations.flask_client')
+        self.oauth_ext = self.app.extensions.get("authlib.integrations.flask_client")
         # Patch the google client in the registry
-        if self.oauth_ext and hasattr(self.oauth_ext, '_clients'):
-             self.google_client_mock = Mock()
-             self.original_client = self.oauth_ext._clients.get('google')
-             self.oauth_ext._clients['google'] = self.google_client_mock
+        if self.oauth_ext and hasattr(self.oauth_ext, "_clients"):
+            self.google_client_mock = Mock()
+            self.original_client = self.oauth_ext._clients.get("google")
+            self.oauth_ext._clients["google"] = self.google_client_mock
         else:
-             # Fallback or error if structure is different
-             self.google_client_mock = None
+            # Fallback or error if structure is different
+            self.google_client_mock = None
 
     def tearDown(self):
-        if self.oauth_ext and hasattr(self.oauth_ext, '_clients') and hasattr(self, 'original_client'):
-             if self.original_client:
-                 self.oauth_ext._clients['google'] = self.original_client
+        if self.oauth_ext and hasattr(self.oauth_ext, "_clients") and hasattr(self, "original_client"):
+            if self.original_client:
+                self.oauth_ext._clients["google"] = self.original_client
         super(TestGoogleOAuthCallback, self).tearDown()
 
     @patch("redash.authentication.google_oauth.create_and_login_user")
@@ -85,7 +85,7 @@ class TestGoogleOAuthCallback(BaseTestCase):
         # Setup successes
         self.google_client_mock.authorize_access_token.return_value = {
             "access_token": "valid_token",
-            "userinfo": {"email": "user@example.com"}
+            "userinfo": {"email": "user@example.com"},
         }
         mock_get_profile.return_value = {"email": "user@example.com", "name": "User", "picture": "http://pic"}
         mock_create_user.return_value = self.factory.create_user()
@@ -95,7 +95,7 @@ class TestGoogleOAuthCallback(BaseTestCase):
 
         with self.app.test_client() as c:
             with c.session_transaction() as sess:
-                sess['org_slug'] = self.factory.org.slug
+                sess["org_slug"] = self.factory.org.slug
 
             rv = c.get("/oauth/google_callback")
 
@@ -124,7 +124,7 @@ class TestGoogleOAuthCallback(BaseTestCase):
     @patch("redash.authentication.google_oauth.get_user_profile")
     def test_authorized_profile_fetch_fail(self, mock_get_profile):
         if not self.google_client_mock:
-           self.skipTest("OAuth extension not found")
+            self.skipTest("OAuth extension not found")
 
         self.google_client_mock.authorize_access_token.return_value = {"access_token": "token"}
         mock_get_profile.return_value = None
@@ -137,7 +137,7 @@ class TestGoogleOAuthCallback(BaseTestCase):
     @patch("redash.authentication.google_oauth.get_user_profile")
     def test_authorized_bad_domain(self, mock_get_profile):
         if not self.google_client_mock:
-           self.skipTest("OAuth extension not found")
+            self.skipTest("OAuth extension not found")
 
         self.google_client_mock.authorize_access_token.return_value = {"access_token": "token"}
         mock_get_profile.return_value = {"email": "bad@bad.com", "name": "Bad", "picture": "pic"}
@@ -145,10 +145,9 @@ class TestGoogleOAuthCallback(BaseTestCase):
         self.factory.org.settings[models.Organization.SETTING_GOOGLE_APPS_DOMAINS] = ["good.com"]
 
         with self.app.test_client() as c:
-             with c.session_transaction() as sess:
-                sess['org_slug'] = self.factory.org.slug
+            with c.session_transaction() as sess:
+                sess["org_slug"] = self.factory.org.slug
 
-             rv = c.get("/oauth/google_callback")
-             self.assertEqual(rv.status_code, 302)
-             self.assertIn("/login", rv.location)
-
+            rv = c.get("/oauth/google_callback")
+            self.assertEqual(rv.status_code, 302)
+            self.assertIn("/login", rv.location)

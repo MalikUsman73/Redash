@@ -24,11 +24,13 @@ class TestCLIQueries(BaseTestCase):
         # Simulate hash change for query 1
         def update_hash_1():
             mock_query1.query_hash = "new_hash_1"
+
         mock_query1.update_query_hash.side_effect = update_hash_1
 
         # No hash change for query 2
         def update_hash_2():
             mock_query2.query_hash = "old_hash_2"
+
         mock_query2.update_query_hash.side_effect = update_hash_2
 
         mock_query_model.query.all.return_value = [mock_query1, mock_query2]

@@ -25,15 +25,18 @@ class TestSAMLAuth(BaseTestCase):
         from redash.authentication.saml_auth import get_saml_client
 
         with self.app.test_request_context("/"):
-             client = get_saml_client(self.factory.org)
-             self.assertIsNotNone(client)
-             mock_saml_client.assert_called()
+            client = get_saml_client(self.factory.org)
+            self.assertIsNotNone(client)
+            mock_saml_client.assert_called()
 
     @patch("redash.authentication.saml_auth.get_saml_client")
     def test_sp_initiated(self, mock_get_client):
         mock_client_instance = Mock()
         mock_get_client.return_value = mock_client_instance
-        mock_client_instance.prepare_for_authenticate.return_value = (None, {"headers": [("Location", "http://idp.example.com/sso")]})
+        mock_client_instance.prepare_for_authenticate.return_value = (
+            None,
+            {"headers": [("Location", "http://idp.example.com/sso")]},
+        )
 
         from redash.authentication.saml_auth import sp_initiated
 
@@ -88,8 +91,9 @@ class TestSAMLAuth(BaseTestCase):
     def test_sp_initiated_disabled(self):
         self.factory.org.set_setting("auth_saml_enabled", False)
         from redash.authentication.saml_auth import sp_initiated
+
         with self.app.test_request_context("/saml/login"):
-             request.view_args = {"org_slug": "default"}
-             rv = sp_initiated(org_slug="default")
-             self.assertEqual(rv.status_code, 302)
-             self.assertIn("/default/", rv.location)
+            request.view_args = {"org_slug": "default"}
+            rv = sp_initiated(org_slug="default")
+            self.assertEqual(rv.status_code, 302)
+            self.assertIn("/default/", rv.location)

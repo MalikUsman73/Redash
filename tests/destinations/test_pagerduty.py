@@ -50,9 +50,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute
         pagerduty.notify(
@@ -63,7 +61,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -95,9 +93,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute with "ok" state (should resolve)
         pagerduty.notify(
@@ -108,7 +104,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify
@@ -130,9 +126,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute with "unknown" state
         pagerduty.notify(
@@ -143,7 +137,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify - should log and return early without creating event
@@ -167,9 +161,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute
         pagerduty.notify(
@@ -180,7 +172,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify custom subject is used
@@ -204,10 +196,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key",
-            "description": "Custom Description from Options"
-        }
+        options = {"integration_key": "test_integration_key", "description": "Custom Description from Options"}
 
         # Execute
         pagerduty.notify(
@@ -218,7 +207,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify description option is used
@@ -242,9 +231,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute
         pagerduty.notify(
@@ -255,7 +242,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify custom body is added to custom_details
@@ -279,9 +266,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 99
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute
         pagerduty.notify(
@@ -292,7 +277,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify incident key format
@@ -317,9 +302,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key"
-        }
+        options = {"integration_key": "test_integration_key"}
 
         # Execute - should not raise exception
         pagerduty.notify(
@@ -330,7 +313,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify exception logging
@@ -353,10 +336,7 @@ class TestPagerDuty(BaseTestCase):
         mock_query = MagicMock()
         mock_query.id = 100
 
-        options = {
-            "integration_key": "test_integration_key",
-            "description": "Description from Options"
-        }
+        options = {"integration_key": "test_integration_key", "description": "Description from Options"}
 
         # Execute
         pagerduty.notify(
@@ -367,7 +347,7 @@ class TestPagerDuty(BaseTestCase):
             app=None,
             host="http://redash.example.com",
             metadata={},
-            options=options
+            options=options,
         )
 
         # Verify custom_subject takes priority
