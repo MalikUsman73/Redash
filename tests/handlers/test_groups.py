@@ -12,10 +12,7 @@ class TestGroupMemberResources(BaseTestCase):
         admin = self.factory.create_admin()
 
         rv = self.make_request(
-            "post",
-            "/api/groups/{}/members".format(group.id),
-            data={"user_id": user.id},
-            user=admin
+            "post", "/api/groups/{}/members".format(group.id), data={"user_id": user.id}, user=admin
         )
         self.assertEqual(rv.status_code, 200)
         self.assertIn(group.id, user.group_ids)
@@ -28,11 +25,7 @@ class TestGroupMemberResources(BaseTestCase):
 
         admin = self.factory.create_admin()
 
-        rv = self.make_request(
-            "get",
-            "/api/groups/{}/members".format(group.id),
-            user=admin
-        )
+        rv = self.make_request("get", "/api/groups/{}/members".format(group.id), user=admin)
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(len(rv.json), 1)
         self.assertEqual(rv.json[0]["id"], user.id)
@@ -45,11 +38,7 @@ class TestGroupMemberResources(BaseTestCase):
 
         admin = self.factory.create_admin()
 
-        rv = self.make_request(
-            "delete",
-            "/api/groups/{}/members/{}".format(group.id, user.id),
-            user=admin
-        )
+        rv = self.make_request("delete", "/api/groups/{}/members/{}".format(group.id, user.id), user=admin)
         self.assertEqual(rv.status_code, 200)
 
         # reload user
@@ -66,10 +55,7 @@ class TestGroupDataSourceResources(BaseTestCase):
         admin = self.factory.create_admin()
 
         rv = self.make_request(
-            "post",
-            "/api/groups/{}/data_sources".format(group.id),
-            data={"data_source_id": ds.id},
-            user=admin
+            "post", "/api/groups/{}/data_sources".format(group.id), data={"data_source_id": ds.id}, user=admin
         )
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(rv.json["id"], ds.id)
@@ -77,6 +63,7 @@ class TestGroupDataSourceResources(BaseTestCase):
         # Verify persistence
         ds_group = models.DataSourceGroup.query.filter_by(group_id=group.id, data_source_id=ds.id).first()
         self.assertIsNotNone(ds_group)
+
 
 class TestGroupDataSourceListResource(BaseTestCase):
     def test_returns_only_groups_for_current_org(self):
@@ -133,9 +120,6 @@ class TestGroupResourceList(BaseTestCase):
             filtergroups(response.json),
             filtergroups(g.to_dict() for g in [self.factory.default_group, group1]),
         )
-
-
-
 
 
 class TestGroupResourceDelete(BaseTestCase):
@@ -221,15 +205,7 @@ class TestGroupResourcePost(BaseTestCase):
         admin = self.factory.create_admin()
         data = {"name": "New Name"}
 
-        rv = self.make_request(
-            "post",
-            "/api/groups/{}".format(group.id),
-            data=data,
-            user=admin
-        )
+        rv = self.make_request("post", "/api/groups/{}".format(group.id), data=data, user=admin)
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(rv.json["name"], "New Name")
         self.assertEqual(Group.query.get(group.id).name, "New Name")
-
-
-
