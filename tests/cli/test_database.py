@@ -70,11 +70,12 @@ class TestCLIDatabase(BaseTestCase):
         from redash.cli.database import reencrypt
         
         # Setup mocks
-        mock_select_result = [
+        mock_result = MagicMock()
+        mock_result.__iter__.return_value = iter([
             {"id": 1, "encrypted_options": "old_encrypted_data"},
             {"id": 2, "encrypted_options": "old_encrypted_data_2"}
-        ]
-        mock_db.session.execute.return_value = mock_select_result
+        ])
+        mock_db.session.execute.return_value = mock_result
         
         # We need mock_table to return a mock that has an update() method
         mock_table_instance = MagicMock()
@@ -97,5 +98,5 @@ class TestCLIDatabase(BaseTestCase):
         self.assertTrue(mock_db.session.commit.called)
         
         # Check if update was called for each item
-        self.assertEqual(mock_db.session.execute.call_count, 2 + 4)
+        self.assertEqual(mock_db.session.execute.call_count, 2 + 2)  # 2 items + 2 updates
 

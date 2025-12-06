@@ -1,7 +1,9 @@
-from mock import MagicMock, patch
-from tests import BaseTestCase
-from redash.destinations.hangoutschat import HangoutsChat
 import json
+
+from mock import MagicMock, patch
+
+from redash.destinations.hangoutschat import HangoutsChat
+from tests import BaseTestCase
 
 
 class TestHangoutsChat(BaseTestCase):
@@ -13,15 +15,15 @@ class TestHangoutsChat(BaseTestCase):
 
     def test_configuration_schema(self):
         schema = HangoutsChat.configuration_schema()
-        
+
         # Verify schema structure
         self.assertEqual(schema["type"], "object")
         self.assertIn("url", schema["properties"])
         self.assertIn("icon_url", schema["properties"])
-        
+
         # Verify required fields
         self.assertIn("url", schema["required"])
-        
+
         # Verify secret fields
         self.assertIn("url", schema["secret"])
 
@@ -34,22 +36,22 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute
         hangouts.notify(
             alert=mock_alert,
@@ -61,25 +63,25 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         mock_post.assert_called_once()
         call_args = mock_post.call_args
-        
+
         self.assertEqual(call_args[0][0], "https://chat.googleapis.com/webhook")
-        
+
         # Parse the posted data
         posted_data = json.loads(call_args[1]["data"])
-        
+
         # Verify card structure
         self.assertIn("cards", posted_data)
         self.assertEqual(posted_data["cards"][0]["header"]["title"], "Test Alert")
-        
+
         # Verify triggered message
         message_text = posted_data["cards"][0]["sections"][0]["widgets"][0]["textParagraph"]["text"]
         self.assertIn("Triggered", message_text)
         self.assertIn("#c0392b", message_text)  # Red color
-        
+
         # Verify button with query link
         button = posted_data["cards"][0]["sections"][0]["widgets"][1]["buttons"][0]
         self.assertEqual(button["textButton"]["text"], "OPEN QUERY")
@@ -91,22 +93,22 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute
         hangouts.notify(
             alert=mock_alert,
@@ -118,10 +120,10 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         posted_data = json.loads(mock_post.call_args[1]["data"])
-        
+
         # Verify ok message
         message_text = posted_data["cards"][0]["sections"][0]["widgets"][0]["textParagraph"]["text"]
         self.assertIn("Went back to normal", message_text)
@@ -133,22 +135,22 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute with unknown state
         hangouts.notify(
             alert=mock_alert,
@@ -160,10 +162,10 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         posted_data = json.loads(mock_post.call_args[1]["data"])
-        
+
         # Verify unknown state message
         message_text = posted_data["cards"][0]["sections"][0]["widgets"][0]["textParagraph"]["text"]
         self.assertIn("Unable to determine status", message_text)
@@ -174,22 +176,22 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = "Custom Subject"
         mock_alert.custom_body = "Custom Body Content"
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute
         hangouts.notify(
             alert=mock_alert,
@@ -201,13 +203,13 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         posted_data = json.loads(mock_post.call_args[1]["data"])
-        
+
         # Verify custom subject
         self.assertEqual(posted_data["cards"][0]["header"]["title"], "Custom Subject")
-        
+
         # Verify custom body is added as second section
         self.assertEqual(len(posted_data["cards"][0]["sections"]), 2)
         custom_body_text = posted_data["cards"][0]["sections"][1]["widgets"][0]["textParagraph"]["text"]
@@ -219,23 +221,23 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook",
             "icon_url": "https://example.com/icon.png"
         }
-        
+
         # Execute
         hangouts.notify(
             alert=mock_alert,
@@ -247,10 +249,10 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         posted_data = json.loads(mock_post.call_args[1]["data"])
-        
+
         # Verify icon URL is set
         self.assertEqual(posted_data["cards"][0]["header"]["imageUrl"], "https://example.com/icon.png")
 
@@ -260,22 +262,22 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute without host
         hangouts.notify(
             alert=mock_alert,
@@ -287,10 +289,10 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         posted_data = json.loads(mock_post.call_args[1]["data"])
-        
+
         # Verify no button is added when host is None
         widgets = posted_data["cards"][0]["sections"][0]["widgets"]
         self.assertEqual(len(widgets), 1)  # Only the message widget, no button
@@ -302,22 +304,22 @@ class TestHangoutsChat(BaseTestCase):
         mock_response = MagicMock()
         mock_response.status_code = 400
         mock_post.return_value = mock_response
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute
         hangouts.notify(
             alert=mock_alert,
@@ -329,7 +331,7 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify error logging
         mock_logging.error.assert_called()
         error_message = mock_logging.error.call_args[0][0]
@@ -340,22 +342,22 @@ class TestHangoutsChat(BaseTestCase):
     def test_notify_with_exception(self, mock_post, mock_logging):
         # Setup
         mock_post.side_effect = Exception("Network error")
-        
+
         hangouts = HangoutsChat({"url": "https://chat.googleapis.com/webhook"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "url": "https://chat.googleapis.com/webhook"
         }
-        
+
         # Execute - should not raise exception
         hangouts.notify(
             alert=mock_alert,
@@ -367,6 +369,6 @@ class TestHangoutsChat(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify exception logging
         mock_logging.exception.assert_called_with("webhook send ERROR.")

@@ -17,6 +17,16 @@ class TestResetPassword(BaseTestCase):
 
 
 class TestInvite(BaseTestCase):
+    def setUp(self):
+        super(TestInvite, self).setUp()
+        # Disable LDAP to avoid URL building issues when LDAP blueprint is registered
+        self.ldap_enabled_patch = mock.patch('redash.settings.LDAP_LOGIN_ENABLED', False)
+        self.ldap_enabled_patch.start()
+
+    def tearDown(self):
+        self.ldap_enabled_patch.stop()
+        super(TestInvite, self).tearDown()
+
     def test_expired_invite_token(self):
         with mock.patch("time.time") as patched_time:
             patched_time.return_value = time.time() - (7 * 24 * 3600) - 10
@@ -47,6 +57,16 @@ class TestInvite(BaseTestCase):
 
 
 class TestInvitePost(BaseTestCase):
+    def setUp(self):
+        super(TestInvitePost, self).setUp()
+        # Disable LDAP to avoid URL building issues when LDAP blueprint is registered
+        self.ldap_enabled_patch = mock.patch('redash.settings.LDAP_LOGIN_ENABLED', False)
+        self.ldap_enabled_patch.start()
+
+    def tearDown(self):
+        self.ldap_enabled_patch.stop()
+        super(TestInvitePost, self).tearDown()
+
     def test_empty_password(self):
         token = invite_token(self.factory.user)
         response = self.post_request("/invite/{}".format(token), data={"password": ""}, org=self.factory.org)

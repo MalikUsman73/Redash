@@ -1,6 +1,7 @@
 from mock import MagicMock, patch
-from tests import BaseTestCase
+
 from redash.destinations.pagerduty import PagerDuty
+from tests import BaseTestCase
 
 
 class TestPagerDuty(BaseTestCase):
@@ -11,15 +12,15 @@ class TestPagerDuty(BaseTestCase):
 
     def test_configuration_schema(self):
         schema = PagerDuty.configuration_schema()
-        
+
         # Verify schema structure
         self.assertEqual(schema["type"], "object")
         self.assertIn("integration_key", schema["properties"])
         self.assertIn("description", schema["properties"])
-        
+
         # Verify required fields
         self.assertIn("integration_key", schema["required"])
-        
+
         # Verify secret fields
         self.assertIn("integration_key", schema["secret"])
 
@@ -37,22 +38,22 @@ class TestPagerDuty(BaseTestCase):
         # Setup
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute
         pagerduty.notify(
             alert=mock_alert,
@@ -64,11 +65,11 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         mock_create.assert_called_once()
         call_data = mock_create.call_args[1]["data"]
-        
+
         self.assertEqual(call_data["routing_key"], "test_integration_key")
         self.assertEqual(call_data["incident_key"], "1_100")
         self.assertEqual(call_data["dedup_key"], "1_100")
@@ -82,22 +83,22 @@ class TestPagerDuty(BaseTestCase):
         # Setup
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute with "ok" state (should resolve)
         pagerduty.notify(
             alert=mock_alert,
@@ -109,7 +110,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify
         call_data = mock_create.call_args[1]["data"]
         self.assertEqual(call_data["event_action"], "resolve")
@@ -119,20 +120,20 @@ class TestPagerDuty(BaseTestCase):
     def test_notify_unknown_state(self, mock_create, mock_logging):
         # Setup
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute with "unknown" state
         pagerduty.notify(
             alert=mock_alert,
@@ -144,7 +145,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify - should log and return early without creating event
         mock_logging.info.assert_called_with("Unknown state, doing nothing")
         mock_create.assert_not_called()
@@ -154,22 +155,22 @@ class TestPagerDuty(BaseTestCase):
         # Setup
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = "Custom Subject Message"
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute
         pagerduty.notify(
             alert=mock_alert,
@@ -181,7 +182,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify custom subject is used
         call_data = mock_create.call_args[1]["data"]
         self.assertEqual(call_data["payload"]["summary"], "Custom Subject Message")
@@ -191,23 +192,23 @@ class TestPagerDuty(BaseTestCase):
         # Setup
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key",
             "description": "Custom Description from Options"
         }
-        
+
         # Execute
         pagerduty.notify(
             alert=mock_alert,
@@ -219,7 +220,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify description option is used
         call_data = mock_create.call_args[1]["data"]
         self.assertEqual(call_data["payload"]["summary"], "Custom Description from Options")
@@ -229,22 +230,22 @@ class TestPagerDuty(BaseTestCase):
         # Setup
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = "Custom body with details"
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute
         pagerduty.notify(
             alert=mock_alert,
@@ -256,7 +257,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify custom body is added to custom_details
         call_data = mock_create.call_args[1]["data"]
         self.assertEqual(call_data["payload"]["custom_details"], "Custom body with details")
@@ -266,22 +267,22 @@ class TestPagerDuty(BaseTestCase):
         # Setup
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 42
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 99
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute
         pagerduty.notify(
             alert=mock_alert,
@@ -293,7 +294,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify incident key format
         call_data = mock_create.call_args[1]["data"]
         self.assertEqual(call_data["incident_key"], "42_99")
@@ -304,22 +305,22 @@ class TestPagerDuty(BaseTestCase):
     def test_notify_with_exception(self, mock_create, mock_logging):
         # Setup
         mock_create.side_effect = Exception("PagerDuty API error")
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = None
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key"
         }
-        
+
         # Execute - should not raise exception
         pagerduty.notify(
             alert=mock_alert,
@@ -331,7 +332,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify exception logging
         mock_logging.exception.assert_called_with("PagerDuty trigger failed!")
 
@@ -340,23 +341,23 @@ class TestPagerDuty(BaseTestCase):
         # Test that custom_subject takes priority over description option
         mock_event = MagicMock()
         mock_create.return_value = mock_event
-        
+
         pagerduty = PagerDuty({"integration_key": "test_key"})
-        
+
         mock_alert = MagicMock()
         mock_alert.id = 1
         mock_alert.name = "Test Alert"
         mock_alert.custom_subject = "Custom Subject"
         mock_alert.custom_body = None
-        
+
         mock_query = MagicMock()
         mock_query.id = 100
-        
+
         options = {
             "integration_key": "test_integration_key",
             "description": "Description from Options"
         }
-        
+
         # Execute
         pagerduty.notify(
             alert=mock_alert,
@@ -368,7 +369,7 @@ class TestPagerDuty(BaseTestCase):
             metadata={},
             options=options
         )
-        
+
         # Verify custom_subject takes priority
         call_data = mock_create.call_args[1]["data"]
         self.assertEqual(call_data["payload"]["summary"], "Custom Subject")
