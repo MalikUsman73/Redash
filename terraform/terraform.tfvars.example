@@ -1,0 +1,26 @@
+# Example terraform.tfvars file
+# Copy this to terraform.tfvars and fill in your values
+
+aws_region = "us-east-1"
+project_name = "redash"
+environment = "production"
+
+# Database configuration
+db_instance_class = "db.t3.micro"
+db_allocated_storage = 20
+db_password = "CHANGE_ME_TO_SECURE_PASSWORD"
+
+# Redis configuration
+redis_node_type = "cache.t3.micro"
+
+# ECS configuration
+ecs_task_cpu = "512"
+ecs_task_memory = "1024"
+ecs_desired_count = 1
+
+# Redash secrets (generate random strings)
+redash_secret_key = "CHANGE_ME_TO_RANDOM_STRING"
+redash_cookie_secret = "CHANGE_ME_TO_RANDOM_STRING"
+
+# Container image (will be updated by CI/CD)
+container_image = "redash/redash:latest"
