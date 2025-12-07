@@ -10,7 +10,7 @@ let cypressConfigBaseUrl;
 try {
   const cypressConfig = JSON.parse(fs.readFileSync("cypress.json"));
   cypressConfigBaseUrl = cypressConfig.baseUrl;
-} catch (e) {}
+} catch (e) { }
 
 const baseUrl = process.env.CYPRESS_baseUrl || cypressConfigBaseUrl || "http://localhost:5001";
 
@@ -43,18 +43,18 @@ function seedDatabase(seedValues) {
 
 function buildServer() {
   console.log("Building the server...");
-  execSync("docker compose -p cypress build", { stdio: "inherit" });
+  execSync("docker compose -p cypress build", { stdio: "inherit", env: process.env });
 }
 
 function startServer() {
   console.log("Starting the server...");
-  execSync("docker compose -p cypress up -d", { stdio: "inherit" });
-  execSync("docker compose -p cypress run server create_db", { stdio: "inherit" });
+  execSync("docker compose -p cypress up -d", { stdio: "inherit", env: process.env });
+  execSync("docker compose -p cypress run server create_db", { stdio: "inherit", env: process.env });
 }
 
 function stopServer() {
   console.log("Stopping the server...");
-  execSync("docker compose -p cypress down", { stdio: "inherit" });
+  execSync("docker compose -p cypress down", { stdio: "inherit", env: process.env });
 }
 
 function runCypressCI() {
@@ -69,7 +69,7 @@ function runCypressCI() {
 
   execSync(
     "COMMIT_INFO_MESSAGE=$(git show -s --format=%s) docker compose run --name cypress cypress ./node_modules/.bin/percy exec -t 300 -- ./node_modules/.bin/cypress run $CYPRESS_OPTIONS",
-    { stdio: "inherit" }
+    { stdio: "inherit", env: process.env }
   );
 }
 
