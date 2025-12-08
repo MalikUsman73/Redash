@@ -22,6 +22,7 @@ env:
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY || 'redash' }}
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER || 'redash-cluster' }}
   ECS_SERVICE: ${{ secrets.ECS_SERVICE || 'redash-service' }}
+  ECS_TASK_DEF: redash-task-family:2
   CONTAINER_NAME: redash
 
 jobs:
@@ -79,7 +80,7 @@ jobs:
       - name: Download current task definition
         run: |
           aws ecs describe-task-definition \
-            --task-definition ${{ env.ECS_SERVICE }} \
+            --task-definition ${{ env.ECS_TASK_DEF }} \
             --query taskDefinition \
             --output json > task-definition.json
           
