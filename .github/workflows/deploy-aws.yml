@@ -28,6 +28,7 @@ jobs:
   deploy:
     name: Deploy to AWS ECS
     runs-on: ubuntu-22.04
+    environment: AWS_Dep  # This tells the workflow to use the AWS_Dep environment secrets
     
     steps:
       - name: Checkout code
